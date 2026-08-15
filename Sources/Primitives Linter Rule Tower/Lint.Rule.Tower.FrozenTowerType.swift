@@ -136,7 +136,9 @@ internal final class FrozenTowerTypeVisitor: SyntaxVisitor {
     private func suppressesEscapable(_ clause: InheritanceClauseSyntax?) -> Swift.Bool {
         guard let clause else { return false }
         return clause.inheritedTypes.contains { inherited in
-            guard let suppressed = inherited.type.as(SuppressedTypeSyntax.self) else { return false }
+            guard let suppressed = inherited.type.as(SuppressedTypeSyntax.self) else {
+                return false
+            }
             return suppressed.type.trimmedDescription == "Escapable"
         }
     }
@@ -146,7 +148,9 @@ internal final class FrozenTowerTypeVisitor: SyntaxVisitor {
     private func hasStoredProperty(_ memberBlock: MemberBlockSyntax) -> Swift.Bool {
         memberBlock.members.contains { member in
             guard let variable = member.decl.as(VariableDeclSyntax.self) else { return false }
-            guard !variable.modifiers.contains(where: { $0.name.text == "static" }) else { return false }
+            guard !variable.modifiers.contains(where: { $0.name.text == "static" }) else {
+                return false
+            }
             return variable.bindings.contains { $0.accessorBlock == nil }
         }
     }

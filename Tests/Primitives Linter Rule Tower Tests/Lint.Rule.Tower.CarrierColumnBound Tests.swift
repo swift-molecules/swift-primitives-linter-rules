@@ -27,7 +27,10 @@ extension Lint.Rule {
 }
 
 extension Lint.Rule.`carrier column bound Tests` {
-    static func findings(in source: Swift.String, file: Swift.String = "test.swift") -> [Diagnostic.Record] {
+    static func findings(
+        in source: Swift.String,
+        file: Swift.String = "test.swift"
+    ) -> [Diagnostic.Record] {
         let parsed = Lint.Source.parsed(from: source, file: file)
         return Lint.Rule.`carrier column bound`.findings(parsed, .warning)
     }
