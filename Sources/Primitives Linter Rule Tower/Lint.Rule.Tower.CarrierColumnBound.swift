@@ -47,7 +47,7 @@ extension Lint.Rule {
     public static let `carrier column bound` = Lint.Rule(
         id: "carrier column bound",
         default: .warning,
-        findings: { source, severity in
+        observe: Lint.Rule.measured { source, severity in
             let visitor = CarrierColumnBoundVisitor(
                 source: source.file,
                 severity: severity,

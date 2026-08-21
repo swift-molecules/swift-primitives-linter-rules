@@ -37,7 +37,7 @@ extension Lint.Rule {
     public static let `clone-less box` = Lint.Rule(
         id: "clone-less box",
         default: .warning,
-        findings: { source, severity in
+        observe: Lint.Rule.measured { source, severity in
             let visitor = CloneLessBoxVisitor(
                 source: source.file,
                 severity: severity,

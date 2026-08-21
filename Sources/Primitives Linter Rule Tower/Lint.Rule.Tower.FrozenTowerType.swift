@@ -37,7 +37,7 @@ extension Lint.Rule {
     public static let `frozen tower type` = Lint.Rule(
         id: "frozen tower type",
         default: .warning,
-        findings: { source, severity in
+        observe: Lint.Rule.measured { source, severity in
             let visitor = FrozenTowerTypeVisitor(
                 source: source.file,
                 severity: severity,
