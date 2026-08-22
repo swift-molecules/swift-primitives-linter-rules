@@ -14,41 +14,41 @@ internal import SwiftSyntax
 /// Finds `self.<property> = Shared(...)` assignments (box replacement or
 /// construction) — the shared visitor helper for `Lint.Rule.\`clone-less box\``.
 internal final class SharedBoxAssignmentFinder: SyntaxVisitor {
-    var found = false
+  var found = false
 
-    /// Folded trees (`SwiftOperators` consumers).
-    override func visit(_ node: InfixOperatorExprSyntax) -> SyntaxVisitorContinueKind {
-        if node.operator.is(AssignmentExprSyntax.self),
-            isSelfMember(node.leftOperand), isSharedCall(node.rightOperand)
-        {
-            found = true
-            return .skipChildren
-        }
-        return .visitChildren
+  /// Folded trees (`SwiftOperators` consumers).
+  override func visit(_ node: InfixOperatorExprSyntax) -> SyntaxVisitorContinueKind {
+    if node.operator.is(AssignmentExprSyntax.self),
+      isSelfMember(node.leftOperand), isSharedCall(node.rightOperand)
+    {
+      found = true
+      return .skipChildren
     }
+    return .visitChildren
+  }
 
-    /// Raw (unfolded) trees: `a = b` parses as a 3-element sequence with an
-    /// `AssignmentExprSyntax` in operator position.
-    override func visit(_ node: SequenceExprSyntax) -> SyntaxVisitorContinueKind {
-        let elements = Swift.Array(node.elements)
-        for index in elements.indices.dropFirst().dropLast() {
-            if elements[index].is(AssignmentExprSyntax.self),
-                isSelfMember(elements[index - 1]), isSharedCall(elements[index + 1])
-            {
-                found = true
-                return .skipChildren
-            }
-        }
-        return .visitChildren
+  /// Raw (unfolded) trees: `a = b` parses as a 3-element sequence with an
+  /// `AssignmentExprSyntax` in operator position.
+  override func visit(_ node: SequenceExprSyntax) -> SyntaxVisitorContinueKind {
+    let elements = Swift.Array(node.elements)
+    for index in elements.indices.dropFirst().dropLast() {
+      if elements[index].is(AssignmentExprSyntax.self),
+        isSelfMember(elements[index - 1]), isSharedCall(elements[index + 1])
+      {
+        found = true
+        return .skipChildren
+      }
     }
+    return .visitChildren
+  }
 
-    private func isSelfMember(_ expression: ExprSyntax) -> Swift.Bool {
-        guard let member = expression.as(MemberAccessExprSyntax.self) else { return false }
-        return member.base?.as(DeclReferenceExprSyntax.self)?.baseName.text == "self"
-    }
+  private func isSelfMember(_ expression: ExprSyntax) -> Swift.Bool {
+    guard let member = expression.as(MemberAccessExprSyntax.self) else { return false }
+    return member.base?.as(DeclReferenceExprSyntax.self)?.baseName.text == "self"
+  }
 
-    private func isSharedCall(_ expression: ExprSyntax) -> Swift.Bool {
-        guard let call = expression.as(FunctionCallExprSyntax.self) else { return false }
-        return call.calledExpression.as(DeclReferenceExprSyntax.self)?.baseName.text == "Shared"
-    }
+  private func isSharedCall(_ expression: ExprSyntax) -> Swift.Bool {
+    guard let call = expression.as(FunctionCallExprSyntax.self) else { return false }
+    return call.calledExpression.as(DeclReferenceExprSyntax.self)?.baseName.text == "Shared"
+  }
 }
