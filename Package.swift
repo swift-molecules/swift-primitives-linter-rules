@@ -58,14 +58,14 @@ let package = Package(
             name: "Linter Primitives Rules",
             dependencies: [
                 .product(name: "Linter Primitives", package: "swift-linter-primitives"),
-                "Primitives Linter Rule Tower",
+                .target(name: "Primitives Linter Rule Tower"),
                 .product(name: "Linter Institute Rules", package: "swift-institute-linter-rules"),
             ]
         ),
         .testTarget(
             name: "Primitives Linter Rule Tower Tests",
             dependencies: [
-                "Primitives Linter Rule Tower",
+                .target(name: "Primitives Linter Rule Tower"),
                 .product(name: "Linter Rules Test Support", package: "swift-linter-rules"),
                 .product(name: "SwiftParser", package: "swift-syntax"),
             ]

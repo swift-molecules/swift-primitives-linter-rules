@@ -22,6 +22,7 @@ extension Lint.Rule {
     struct `frozen tower type Tests` {
         @Suite struct Unit {}
         @Suite struct `Edge Case` {}
+        @Suite struct Integration {}
         @Suite struct Negative {}
     }
 }

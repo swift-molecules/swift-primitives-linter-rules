@@ -22,6 +22,7 @@ extension Lint.Rule {
     struct `carrier column bound Tests` {
         @Suite struct Unit {}
         @Suite struct `Edge Case` {}
+        @Suite struct Integration {}
         @Suite struct Negative {}
     }
 }
