@@ -33,7 +33,7 @@ extension Lint.Rule.`carrier column bound Tests` {
     file: Swift.String = "test.swift"
   ) -> [Diagnostic.Record] {
     let parsed = Lint.Source.parsed(from: source, file: file)
-    return Lint.Rule.`carrier column bound`.findings(parsed, .warning)
+    return Lint.Rule.`carrier column bound`.observe(parsed, .warning).findings
   }
 }
 

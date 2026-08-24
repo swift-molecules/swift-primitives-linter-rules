@@ -33,7 +33,7 @@ extension Lint.Rule.`frozen tower type Tests` {
     file: Swift.String = "test.swift"
   ) -> [Diagnostic.Record] {
     let parsed = Lint.Source.parsed(from: source, file: file)
-    return Lint.Rule.`frozen tower type`.findings(parsed, .warning)
+    return Lint.Rule.`frozen tower type`.observe(parsed, .warning).findings
   }
 }
 

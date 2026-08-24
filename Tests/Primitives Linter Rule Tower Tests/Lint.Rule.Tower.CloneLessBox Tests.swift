@@ -33,7 +33,7 @@ extension Lint.Rule.`clone-less box Tests` {
     file: Swift.String = "test.swift"
   ) -> [Diagnostic.Record] {
     let parsed = Lint.Source.parsed(from: source, file: file)
-    return Lint.Rule.`clone-less box`.findings(parsed, .warning)
+    return Lint.Rule.`clone-less box`.observe(parsed, .warning).findings
   }
 }
 
