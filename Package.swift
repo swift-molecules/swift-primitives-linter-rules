@@ -25,7 +25,8 @@ let package = Package(
     products: [
         // A5 move (2026-07-07) — the RawValue and Cardinal brand-consumer
         // packs relocated to swift-institute-linter-rules so they enforce at
-        // L2/L3 too. Only the tower-author rules (genuinely L1-only) remain.
+        // standards/compositions too. Only the tower-author rules
+        // (genuinely molecule-layer-only) remain.
         // Round M ζ pilot (2026-06-12) — tower-scoped structural rules.
         .library(
             name: "Primitives Linter Rule Tower",
@@ -33,7 +34,7 @@ let package = Package(
         ),
 
         // Aggregate bundle — publishes `Lint.Rule.Bundle.primitives`
-        // (= institute + primitives-tier rules). Primitives-tier
+        // (= institute + molecule-layer rules). Molecule-layer
         // consumers depend on this product alone.
         .library(
             name: "Linter Primitives Rules",
@@ -41,23 +42,23 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-primitives/swift-linter-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-foundations/swift-institute-linter-rules.git", branch: "main"),
-        .package(url: "https://github.com/swift-foundations/swift-linter-rules.git", branch: "main"),
+        .package(url: "https://github.com/swift-molecules/swift-linter.git", branch: "main"),
+        .package(url: "https://github.com/swift-compositions/swift-institute-linter-rules.git", branch: "main"),
+        .package(url: "https://github.com/swift-compositions/swift-linter-rules.git", branch: "main"),
         .package(url: "https://github.com/swiftlang/swift-syntax.git", "602.0.0"..<"603.0.0"),
     ],
     targets: [
         .target(
             name: "Primitives Linter Rule Tower",
             dependencies: [
-                .product(name: "Linter Primitives", package: "swift-linter-primitives"),
+                .product(name: "Linter", package: "swift-linter"),
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
             ]
         ),
         .target(
             name: "Linter Primitives Rules",
             dependencies: [
-                .product(name: "Linter Primitives", package: "swift-linter-primitives"),
+                .product(name: "Linter", package: "swift-linter"),
                 .target(name: "Primitives Linter Rule Tower"),
                 .product(name: "Linter Institute Rules", package: "swift-institute-linter-rules"),
             ]

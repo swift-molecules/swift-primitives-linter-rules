@@ -1,9 +1,9 @@
 # Primitives Linter Rules
 
 ![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
-[![CI](https://github.com/swift-primitives/swift-primitives-linter-rules/actions/workflows/ci.yml/badge.svg)](https://github.com/swift-primitives/swift-primitives-linter-rules/actions/workflows/ci.yml)
+[![CI](https://github.com/swift-molecules/swift-primitives-linter-rules/actions/workflows/ci.yml/badge.svg)](https://github.com/swift-molecules/swift-primitives-linter-rules/actions/workflows/ci.yml)
 
-The primitives-tier rule pack for [swift-linter](https://github.com/swift-foundations/swift-linter): SwiftSyntax AST rules that catch anti-patterns a regex cannot — evasion-resistant detection of untyped index arithmetic, `rawValue` chaining, and unlocked storage-tower layouts — aggregated into a single bundle, `Lint.Rule.Bundle.primitives`.
+The molecule-layer rule pack for [swift-linter](https://github.com/swift-molecules/swift-linter): SwiftSyntax AST rules that catch anti-patterns a regex cannot — evasion-resistant detection of untyped index arithmetic, `rawValue` chaining, and unlocked storage-tower layouts — aggregated into a single bundle, `Lint.Rule.Bundle.primitives`.
 
 Each rule is an AST predicate, not a text match. `seq.count - 1` is caught whether it is written directly, paren-wrapped (`(seq.count) - 1`), cast-wrapped (`Double(seq.count) - 1`), operand-reordered (`seq.count - i - 1`), or algebraically flipped through a comparison (`i + 1 < seq.count`) — after operator folding these collapse to two syntax-tree shapes, so the rewrites that defeat a regex all land on the same predicate. Comments and string literals are trivia at the AST level, so they can never false-positive.
 
@@ -21,7 +21,7 @@ Each rule is an AST predicate, not a text match. `seq.count - 1` is caught wheth
 | Tower | `frozen tower type` | Public stored value types in the storage-tower namespaces (`Buffer`, `Array`, `Column`, …) that are not `@frozen`, which would block cross-module consuming decomposition |
 | Tower | `clone-less box` | A `Shared`-box replacement in a function whose own generics suppress copyability, with no same-file Copyable twin overload — the shape that statically resolves to the strategy-less box initializer and traps on the first post-fork mutation |
 
-`Lint.Rule.Bundle.primitives` composes the institute-tier bundle (which transitively includes the universal bundle) plus all seven rules above, so a primitives-tier consumer activates the full applicable rule set with one declaration.
+`Lint.Rule.Bundle.primitives` composes the institute-tier bundle (which transitively includes the universal bundle) plus all seven rules above, so a molecule-layer consumer activates the full applicable rule set with one declaration.
 
 ---
 
@@ -51,7 +51,7 @@ Add the dependency to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/swift-primitives/swift-primitives-linter-rules.git", branch: "main")
+    .package(url: "https://github.com/swift-molecules/swift-primitives-linter-rules.git", branch: "main")
 ]
 ```
 
@@ -83,9 +83,9 @@ The package is pre-1.0 — depend on `branch: "main"` until `0.1.0` is tagged. R
 
 ## Related Packages
 
-- [`swift-linter-primitives`](https://github.com/swift-primitives/swift-linter-primitives) — the `Lint.Rule` / `Lint.Rule.Configuration` vocabulary these rules are written against.
-- [`swift-institute-linter-rules`](https://github.com/swift-foundations/swift-institute-linter-rules) — the institute-tier bundle this package's bundle composes.
-- [`swift-linter-rules`](https://github.com/swift-foundations/swift-linter-rules) — the universal rule packs and the rule test support used by this package's tests.
+- [`swift-linter`](https://github.com/swift-molecules/swift-linter) — the `Lint.Rule` / `Lint.Rule.Configuration` vocabulary these rules are written against.
+- [`swift-institute-linter-rules`](https://github.com/swift-compositions/swift-institute-linter-rules) — the institute-tier bundle this package's bundle composes.
+- [`swift-linter-rules`](https://github.com/swift-compositions/swift-linter-rules) — the universal rule packs and the rule test support used by this package's tests.
 
 ---
 

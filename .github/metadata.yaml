@@ -1,7 +1,7 @@
 # .github/metadata.yaml
-description: "Primitives-tier lint rule packs for swift-linter — SwiftSyntax AST rules for typed-cardinal, rawValue-chain, and storage-tower disciplines, aggregated in Lint.Rule.Bundle.primitives."
+description: "Molecule-layer lint rule packs for swift-linter — SwiftSyntax AST rules for typed-cardinal, rawValue-chain, and storage-tower disciplines, aggregated in Lint.Rule.Bundle.primitives."
 topics:
-  - primitives
+  - molecules
   - linter
   - swift-syntax
 homepage: "https://swift-institute.org"

@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Linter_Primitives
+public import Linter
 internal import SwiftSyntax
 
 /// [MEM-COPY-019] — box-replacing overloads split per the [MEM-COPY-017] pinned pair.

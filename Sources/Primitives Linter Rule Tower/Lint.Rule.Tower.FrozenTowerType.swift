@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Linter_Primitives
+public import Linter
 internal import SwiftSyntax
 
 /// [API-IMPL-022] — public STORED value types in the storage tower are `@frozen`.
@@ -25,7 +25,7 @@ internal import SwiftSyntax
 /// demonstrated cross-module partial-consumption need.
 ///
 /// The namespace allowlist is the rule's tower scope: the bundle reaches every
-/// primitives-tier consumer, and non-tower packages declare no types under
+/// molecule-layer consumer, and non-tower packages declare no types under
 /// these roots, so the rule self-scopes (validated against the non-tower
 /// ladder at promotion — 0 findings).
 extension Lint.Rule {
