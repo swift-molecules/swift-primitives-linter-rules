@@ -42,23 +42,23 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-molecules/swift-linter.git", branch: "main"),
+        .package(url: "https://github.com/swift-molecules/swift-lint.git", branch: "main"),
         .package(url: "https://github.com/swift-compositions/swift-institute-linter-rules.git", branch: "main"),
         .package(url: "https://github.com/swift-compositions/swift-linter-rules.git", branch: "main"),
-        .package(url: "https://github.com/swiftlang/swift-syntax.git", "602.0.0"..<"603.0.0"),
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", "603.0.2"..<"604.0.0"),
     ],
     targets: [
         .target(
             name: "Primitives Linter Rule Tower",
             dependencies: [
-                .product(name: "Linter", package: "swift-linter"),
+                .product(name: "Lint", package: "swift-lint"),
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
             ]
         ),
         .target(
             name: "Linter Primitives Rules",
             dependencies: [
-                .product(name: "Linter", package: "swift-linter"),
+                .product(name: "Lint", package: "swift-lint"),
                 .target(name: "Primitives Linter Rule Tower"),
                 .product(name: "Linter Institute Rules", package: "swift-institute-linter-rules"),
             ]

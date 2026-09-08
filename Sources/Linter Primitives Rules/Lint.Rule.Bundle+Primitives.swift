@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 public import Linter_Institute_Rules
-public import Linter
+public import Lint
 public import Primitives_Linter_Rule_Tower
 
 /// Molecule-layer rule bundle.
