@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-linter open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-linter project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Lint
 import Linter_Rules_Test_Support
 import SwiftParser
@@ -36,8 +25,6 @@ extension Lint.Rule.`clone-less box Tests` {
     return Lint.Rule.`clone-less box`.observe(parsed, .warning).findings
   }
 }
-
-// MARK: - Unit (the rule fires)
 
 extension Lint.Rule.`clone-less box Tests`.Unit {
   @Test
@@ -89,8 +76,6 @@ extension Lint.Rule.`clone-less box Tests`.Unit {
   }
 }
 
-// MARK: - Edge Case (boundary shapes; the rule stays silent)
-
 extension Lint.Rule.`clone-less box Tests`.`Edge Case` {
   @Test
   func `extension-level column suppression alone does not count`() {
@@ -135,8 +120,6 @@ extension Lint.Rule.`clone-less box Tests`.`Edge Case` {
     #expect(findings.isEmpty)
   }
 }
-
-// MARK: - Negative (the lawful pair; the rule stays silent)
 
 extension Lint.Rule.`clone-less box Tests`.Negative {
   @Test

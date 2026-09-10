@@ -1,39 +1,8 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-linter open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-linter project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 public import Lint
 internal import SwiftSyntax
 
-/// [MEM-COPY-019] — box-replacing overloads split per the [MEM-COPY-017] pinned pair.
-///
-/// Fires on a function/initializer that (1) assigns a fresh `Shared` box to a
-/// stored property (`self.x = Shared(...)` — box replacement or construction),
-/// (2) carries a `~Copyable` suppression on its OWN generic parameters (the
-/// element/payload bounds; extension-level column suppression `S: ~Copyable`
-/// does not count), and (3) has NO same-name twin in the same file whose own
-/// generic parameters carry no suppression (the implicitly-Copyable overload —
-/// the lawful pair's other half, which resolves `Shared(_:)` to the
-/// strategy-CARRYING init).
-///
-/// Under suppression, overload resolution statically selects the strategy-less
-/// init: the replacement box works while unique and TRAPS on the first
-/// post-fork mutation. The same-file twin requirement is the rule's recorded
-/// heuristic (the pinned pair co-locates).
 extension Lint.Rule {
-  /// Flags overloads that replace a `Shared` box under `~Copyable` generic bounds without an implicitly-Copyable same-name twin in the same file ([MEM-COPY-019]).
-  ///
-  /// Under suppression, overload resolution statically selects the
-  /// strategy-less `Shared` init, so the replacement box traps on the first
-  /// post-fork mutation; the [MEM-COPY-017] pinned pair restores the
-  /// strategy-carrying path.
+
   public static let `clone-less box` = Lint.Rule(
     id: "clone-less box",
     default: .warning,
@@ -160,11 +129,6 @@ internal final class CloneLessBoxVisitor: SyntaxVisitor {
     )
   }
 
-  /// Whether the decl's OWN generic parameters carry a `~Copyable` suppression —
-  /// inline (`<V: ~Copyable>`) or via the decl's where clause (`where V: ~Copyable`
-  /// for an own parameter).
-  ///
-  /// Extension-level suppression does not count.
   private func suppressesOwnParameter(
     _ genericParameters: GenericParameterClauseSyntax?,
     _ whereClause: GenericWhereClauseSyntax?
@@ -189,7 +153,6 @@ internal final class CloneLessBoxVisitor: SyntaxVisitor {
     return false
   }
 
-  /// `~Copyable`, possibly inside a composition (`Hash.Key & ~Copyable`).
   private func containsSuppressedCopyable(_ type: TypeSyntax) -> Swift.Bool {
     if let suppressed = type.as(SuppressedTypeSyntax.self) {
       return suppressed.type.trimmedDescription == "Copyable"
@@ -202,8 +165,6 @@ internal final class CloneLessBoxVisitor: SyntaxVisitor {
     return false
   }
 
-  /// Whether the body assigns `self.<property> = Shared(...)` (box replacement
-  /// or construction).
   private func assignsSharedBox(_ body: CodeBlockSyntax) -> Swift.Bool {
     let finder = SharedBoxAssignmentFinder(viewMode: .sourceAccurate)
     finder.walk(body)

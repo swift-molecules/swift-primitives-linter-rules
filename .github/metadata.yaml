@@ -1,4 +1,3 @@
-# .github/metadata.yaml
 description: "Molecule-layer lint rule packs for swift-linter — SwiftSyntax AST rules for typed-cardinal, rawValue-chain, and storage-tower disciplines, aggregated in Lint.Rule.Bundle.primitives."
 topics:
   - molecules

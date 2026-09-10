@@ -1,16 +1,5 @@
 // swift-tools-version: 6.3.3
 
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-primitives-linter-rules open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-primitives-linter-rules project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import PackageDescription
 
 let package = Package(
@@ -23,19 +12,12 @@ let package = Package(
         .visionOS("27"),
     ],
     products: [
-        // A5 move (2026-07-07) — the RawValue and Cardinal brand-consumer
-        // packs relocated to swift-institute-linter-rules so they enforce at
-        // standards/compositions too. Only the tower-author rules
-        // (genuinely molecule-layer-only) remain.
-        // Round M ζ pilot (2026-06-12) — tower-scoped structural rules.
+
         .library(
             name: "Primitives Linter Rule Tower",
             targets: ["Primitives Linter Rule Tower"]
         ),
 
-        // Aggregate bundle — publishes `Lint.Rule.Bundle.primitives`
-        // (= institute + molecule-layer rules). Molecule-layer
-        // consumers depend on this product alone.
         .library(
             name: "Linter Primitives Rules",
             targets: ["Linter Primitives Rules"]

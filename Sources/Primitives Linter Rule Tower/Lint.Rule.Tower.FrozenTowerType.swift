@@ -1,39 +1,8 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-linter open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-linter project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 public import Lint
 internal import SwiftSyntax
 
-/// [API-IMPL-022] — public STORED value types in the storage tower are `@frozen`.
-///
-/// Fires on a `public struct` that (1) roots in a tower namespace (the
-/// data-plane families and substrates — `Storage`, `Store`, `Buffer`, `Shared`,
-/// `Array`, `Fixed`, `Column`, `Queue`, `Deque`, `SlotMap`, `Stack`, `Heap`,
-/// `Tree`, `Graph`, `Hash`, `Set`, `Dictionary`), (2) declares at least one
-/// stored property (data-plane, not a namespace shell), (3) is not `@frozen`,
-/// and (4) is not in the ruled exemption class — views/iterators/snapshots
-/// (`~Escapable` types, and the principal-curated names `Checkpoint`/`Scalar`/
-/// `Segments`/`Walk` plus `Iterator`/`View`-named types), which freeze only on
-/// demonstrated cross-module partial-consumption need.
-///
-/// The namespace allowlist is the rule's tower scope: the bundle reaches every
-/// molecule-layer consumer, and non-tower packages declare no types under
-/// these roots, so the rule self-scopes (validated against the non-tower
-/// ladder at promotion — 0 findings).
 extension Lint.Rule {
-  /// Flags public stored value types rooted in a storage-tower namespace that are not `@frozen` ([API-IMPL-022]).
-  ///
-  /// Views, iterators, and snapshots (`~Escapable` types and the curated
-  /// exemption names) are exempt until cross-module partial consumption is
-  /// demonstrated.
+
   public static let `frozen tower type` = Lint.Rule(
     id: "frozen tower type",
     default: .warning,
@@ -78,15 +47,12 @@ internal final class FrozenTowerTypeVisitor: SyntaxVisitor {
   let converter: SourceLocationConverter
   var matches: [Diagnostic.Record] = []
 
-  /// The tower's data-plane namespace roots ([API-IMPL-022]'s scope).
   private static let towerRoots: Swift.Set<Swift.String> = [
     "Storage", "Store", "Buffer", "Shared", "Array", "Fixed", "Column",
     "Queue", "Deque", "SlotMap", "Stack", "Heap", "Tree", "Graph", "Hash",
     "Set", "Dictionary",
   ]
 
-  /// The ruled exemption class: views/iterators/snapshots stay unfrozen until
-  /// cross-module partial consumption is demonstrated (principal-curated names).
   private static let exemptNames: Swift.Set<Swift.String> = [
     "Checkpoint", "Scalar", "Segments", "Walk", "Iterator", "View",
   ]
@@ -145,8 +111,6 @@ internal final class FrozenTowerTypeVisitor: SyntaxVisitor {
     }
   }
 
-  /// Whether the inheritance clause suppresses `Escapable` (`~Escapable`) —
-  /// the mechanical marker of the view/span exemption class.
   private func suppressesEscapable(_ clause: InheritanceClauseSyntax?) -> Swift.Bool {
     guard let clause else { return false }
     return clause.inheritedTypes.contains { inherited in
@@ -157,8 +121,6 @@ internal final class FrozenTowerTypeVisitor: SyntaxVisitor {
     }
   }
 
-  /// Whether the member block declares at least one stored property
-  /// (an accessor-less, non-static `let`/`var` binding) — the data-plane marker.
   private func hasStoredProperty(_ memberBlock: MemberBlockSyntax) -> Swift.Bool {
     memberBlock.members.contains { member in
       guard let variable = member.decl.as(VariableDeclSyntax.self) else { return false }
@@ -169,10 +131,6 @@ internal final class FrozenTowerTypeVisitor: SyntaxVisitor {
     }
   }
 
-  /// The OUTERMOST namespace component the struct lives under: the extended
-  /// type's base identifier for extension-declared nests, the outermost
-  /// nominal's name for lexically-nested decls, or the struct's own name at
-  /// top level.
   private func rootNamespace(of node: StructDeclSyntax) -> Swift.String? {
     var outermost: Swift.String? = node.name.text
     var current: Syntax? = node.parent
@@ -190,8 +148,6 @@ internal final class FrozenTowerTypeVisitor: SyntaxVisitor {
     return outermost
   }
 
-  /// The first identifier component of a (possibly member/generic) type:
-  /// `Storage.Generational` → `Storage`; `Tree<E>.N` → `Tree`.
   private func baseIdentifier(of type: TypeSyntax) -> Swift.String? {
     if let member = type.as(MemberTypeSyntax.self) {
       return baseIdentifier(of: member.baseType)

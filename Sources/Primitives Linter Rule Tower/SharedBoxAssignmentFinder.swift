@@ -1,22 +1,8 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-linter open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-linter project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 internal import SwiftSyntax
 
-/// Finds `self.<property> = Shared(...)` assignments (box replacement or
-/// construction) — the shared visitor helper for `Lint.Rule.\`clone-less box\``.
 internal final class SharedBoxAssignmentFinder: SyntaxVisitor {
   var found = false
 
-  /// Folded trees (`SwiftOperators` consumers).
   override func visit(_ node: InfixOperatorExprSyntax) -> SyntaxVisitorContinueKind {
     if node.operator.is(AssignmentExprSyntax.self),
       isSelfMember(node.leftOperand), isSharedCall(node.rightOperand)
@@ -27,8 +13,6 @@ internal final class SharedBoxAssignmentFinder: SyntaxVisitor {
     return .visitChildren
   }
 
-  /// Raw (unfolded) trees: `a = b` parses as a 3-element sequence with an
-  /// `AssignmentExprSyntax` in operator position.
   override func visit(_ node: SequenceExprSyntax) -> SyntaxVisitorContinueKind {
     let elements = Swift.Array(node.elements)
     for index in elements.indices.dropFirst().dropLast() {

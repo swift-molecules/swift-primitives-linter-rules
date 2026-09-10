@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-linter open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-linter project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Lint
 import Linter_Rules_Test_Support
 import SwiftParser
@@ -37,12 +26,10 @@ extension Lint.Rule.`carrier column bound Tests` {
   }
 }
 
-// MARK: - Unit (the rule fires — FAIL fixtures)
-
 extension Lint.Rule.`carrier column bound Tests`.Unit {
   @Test
   func `hoisted carrier with an inline composition bound is flagged`() {
-    // The real pre-reshape shape from git history (swift-array-primitives 98ed3fb).
+
     let findings = Lint.Rule.`carrier column bound Tests`.findings(
       in: """
         public struct __Array<S: Store.`Protocol` & Buffer.`Protocol` & ~Copyable>: ~Copyable {
@@ -95,12 +82,10 @@ extension Lint.Rule.`carrier column bound Tests`.Unit {
   }
 }
 
-// MARK: - Edge Case (boundary shapes; the rule stays silent)
-
 extension Lint.Rule.`carrier column bound Tests`.`Edge Case` {
   @Test
   func `capability bound on a capability EXTENSION is the lawful form`() {
-    // The [DS-025] correct shape: the bound lives on the extension, not the type.
+
     let findings = Lint.Rule.`carrier column bound Tests`.findings(
       in: """
         extension __Array where S: Store.`Protocol` & Buffer.`Protocol` {
@@ -113,7 +98,7 @@ extension Lint.Rule.`carrier column bound Tests`.`Edge Case` {
 
   @Test
   func `bound on a NON-column axis is out of scope`() {
-    // The capability bound is on `Element`, not the storage axis `S`.
+
     let findings = Lint.Rule.`carrier column bound Tests`.findings(
       in: """
         public struct __Fixed<Element: Store.`Protocol`> {
@@ -137,8 +122,6 @@ extension Lint.Rule.`carrier column bound Tests`.`Edge Case` {
   }
 }
 
-// MARK: - Negative (out of scope / compliant; the rule stays silent — PASS fixtures)
-
 extension Lint.Rule.`carrier column bound Tests`.Negative {
   @Test
   func `compliant reshaped carrier is silent`() {
@@ -157,7 +140,7 @@ extension Lint.Rule.`carrier column bound Tests`.Negative {
 
   @Test
   func `non-tower struct with an S bound is out of scope`() {
-    // `Widget` is neither a hoisted `__X` carrier nor an ADT-family root.
+
     let findings = Lint.Rule.`carrier column bound Tests`.findings(
       in: """
         public struct Widget<S: Store.`Protocol`> {

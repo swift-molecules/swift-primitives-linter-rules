@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-linter open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-linter project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Lint
 import Linter_Rules_Test_Support
 import SwiftParser
@@ -36,8 +25,6 @@ extension Lint.Rule.`frozen tower type Tests` {
     return Lint.Rule.`frozen tower type`.observe(parsed, .warning).findings
   }
 }
-
-// MARK: - Unit (the rule fires)
 
 extension Lint.Rule.`frozen tower type Tests`.Unit {
   @Test
@@ -85,8 +72,6 @@ extension Lint.Rule.`frozen tower type Tests`.Unit {
     #expect(findings.count == 1)
   }
 }
-
-// MARK: - Edge Case (boundary shapes; the rule stays silent)
 
 extension Lint.Rule.`frozen tower type Tests`.`Edge Case` {
   @Test
@@ -144,8 +129,6 @@ extension Lint.Rule.`frozen tower type Tests`.`Edge Case` {
     #expect(findings.isEmpty)
   }
 }
-
-// MARK: - Negative (out of scope; the rule stays silent)
 
 extension Lint.Rule.`frozen tower type Tests`.Negative {
   @Test
