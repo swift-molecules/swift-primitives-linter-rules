@@ -14,7 +14,7 @@ internal final class SharedBoxAssignmentFinder: SyntaxVisitor {
   }
 
   override func visit(_ node: SequenceExprSyntax) -> SyntaxVisitorContinueKind {
-    let elements = Swift.Array(node.elements)
+    let elements = Swift::Array(node.elements)
     for index in elements.indices.dropFirst().dropLast() {
       if elements[index].is(AssignmentExprSyntax.self),
         isSelfMember(elements[index - 1]), isSharedCall(elements[index + 1])
@@ -26,12 +26,12 @@ internal final class SharedBoxAssignmentFinder: SyntaxVisitor {
     return .visitChildren
   }
 
-  private func isSelfMember(_ expression: ExprSyntax) -> Swift.Bool {
+  private func isSelfMember(_ expression: ExprSyntax) -> Swift::Bool {
     guard let member = expression.as(MemberAccessExprSyntax.self) else { return false }
     return member.base?.as(DeclReferenceExprSyntax.self)?.baseName.text == "self"
   }
 
-  private func isSharedCall(_ expression: ExprSyntax) -> Swift.Bool {
+  private func isSharedCall(_ expression: ExprSyntax) -> Swift::Bool {
     guard let call = expression.as(FunctionCallExprSyntax.self) else { return false }
     return call.calledExpression.as(DeclReferenceExprSyntax.self)?.baseName.text == "Shared"
   }

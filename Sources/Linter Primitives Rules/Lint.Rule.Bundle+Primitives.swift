@@ -1,6 +1,6 @@
-public import Linter_Institute_Rules
+internal import Linter_Institute_Rules
 public import Lint
-public import Primitives_Linter_Rule_Tower
+internal import Primitives_Linter_Rule_Tower
 
 extension Lint.Rule.Bundle {
 

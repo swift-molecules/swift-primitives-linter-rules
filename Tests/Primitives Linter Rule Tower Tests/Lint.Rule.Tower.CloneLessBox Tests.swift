@@ -18,8 +18,8 @@ extension Lint.Rule {
 
 extension Lint.Rule.`clone-less box Tests` {
   static func findings(
-    in source: Swift.String,
-    file: Swift.String = "test.swift"
+    in source: Swift::String,
+    file: Swift::String = "test.swift"
   ) -> [Diagnostic.Record] {
     let parsed = Lint.Source.parsed(from: source, file: file)
     return Lint.Rule.`clone-less box`.observe(parsed, .warning).findings

@@ -30,7 +30,7 @@ extension Lint.Rule {
   )
 }
 
-private let carrierColumnBoundMessage: Swift.String =
+private let carrierColumnBoundMessage: Swift::String =
   "[carrier column bound] [DS-026]: this tower carrier binds its column "
   + "parameter S to a capability protocol (Store/Buffer/Storage.Protocol) ON "
   + "THE TYPE. Per [DS-025] the carrier is always __X<S: ~Copyable>; capability "
@@ -47,14 +47,14 @@ internal final class CarrierColumnBoundVisitor: SyntaxVisitor {
   let converter: SourceLocationConverter
   var matches: [Diagnostic.Record] = []
 
-  private static let storageAxis: Swift.String = "S"
+  private static let storageAxis: Swift::String = "S"
 
-  private static let carrierFamilyRoots: Swift.Set<Swift.String> = [
+  private static let carrierFamilyRoots: Swift::Set<Swift::String> = [
     "Array", "Fixed", "Queue", "Deque", "SlotMap", "Stack", "Heap",
     "Tree", "Hash", "Set", "Dictionary", "Slab", "List", "Bitset",
   ]
 
-  private static let capabilityBases: Swift.Set<Swift.String> = [
+  private static let capabilityBases: Swift::Set<Swift::String> = [
     "Store", "Buffer", "Storage",
   ]
 
@@ -92,17 +92,17 @@ internal final class CarrierColumnBoundVisitor: SyntaxVisitor {
     return .visitChildren
   }
 
-  private func isPublic(_ modifiers: DeclModifierListSyntax) -> Swift.Bool {
+  private func isPublic(_ modifiers: DeclModifierListSyntax) -> Swift::Bool {
     modifiers.contains { $0.name.text == "public" }
   }
 
-  private func isTowerCarrier(_ node: StructDeclSyntax) -> Swift.Bool {
+  private func isTowerCarrier(_ node: StructDeclSyntax) -> Swift::Bool {
     if node.name.text.hasPrefix("__") { return true }
     guard let root = rootNamespace(of: node) else { return false }
     return Self.carrierFamilyRoots.contains(root)
   }
 
-  private func columnHasCapabilityBound(_ node: StructDeclSyntax) -> Swift.Bool {
+  private func columnHasCapabilityBound(_ node: StructDeclSyntax) -> Swift::Bool {
     if let parameters = node.genericParameterClause?.parameters {
       for parameter in parameters
       where stripBackticks(parameter.name.text) == Self.storageAxis {
@@ -126,7 +126,7 @@ internal final class CarrierColumnBoundVisitor: SyntaxVisitor {
     return false
   }
 
-  private func typeReferencesCapabilityProtocol(_ type: TypeSyntax) -> Swift.Bool {
+  private func typeReferencesCapabilityProtocol(_ type: TypeSyntax) -> Swift::Bool {
     if let composition = type.as(CompositionTypeSyntax.self) {
       return composition.elements.contains {
         typeReferencesCapabilityProtocol($0.type)
@@ -145,13 +145,13 @@ internal final class CarrierColumnBoundVisitor: SyntaxVisitor {
     return false
   }
 
-  private func rootNamespace(of node: StructDeclSyntax) -> Swift.String? {
-    var outermost: Swift.String? = node.name.text
+  private func rootNamespace(of node: StructDeclSyntax) -> Swift::String? {
+    var outermost: Swift::String? = node.name.text
     var current: Syntax? = node.parent
     while let ancestor = current {
       if let ext = ancestor.as(ExtensionDeclSyntax.self) {
         outermost = baseIdentifier(of: ext.extendedType)
-      } else if let nominal = ancestor.asProtocol(NamedDeclSyntax.self),
+      } else if let nominal = ancestor.asProtocol((any NamedDeclSyntax).self),
         ancestor.is(StructDeclSyntax.self) || ancestor.is(EnumDeclSyntax.self)
           || ancestor.is(ClassDeclSyntax.self) || ancestor.is(ActorDeclSyntax.self)
       {
@@ -162,7 +162,7 @@ internal final class CarrierColumnBoundVisitor: SyntaxVisitor {
     return outermost.map(stripBackticks)
   }
 
-  private func baseIdentifier(of type: TypeSyntax) -> Swift.String? {
+  private func baseIdentifier(of type: TypeSyntax) -> Swift::String? {
     if let member = type.as(MemberTypeSyntax.self) {
       return baseIdentifier(of: member.baseType)
     }
@@ -172,14 +172,14 @@ internal final class CarrierColumnBoundVisitor: SyntaxVisitor {
     return nil
   }
 
-  private func leafName(of type: TypeSyntax) -> Swift.String {
+  private func leafName(of type: TypeSyntax) -> Swift::String {
     if let identifier = type.as(IdentifierTypeSyntax.self) {
       return stripBackticks(identifier.name.text)
     }
     return ""
   }
 
-  private func stripBackticks(_ text: Swift.String) -> Swift.String {
+  private func stripBackticks(_ text: Swift::String) -> Swift::String {
     var result = text
     if result.hasPrefix("`") { result.removeFirst() }
     if result.hasSuffix("`") { result.removeLast() }

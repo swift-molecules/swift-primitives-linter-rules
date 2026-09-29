@@ -32,7 +32,7 @@ extension Lint.Rule {
   )
 }
 
-private let frozenTowerTypeMessage: Swift.String =
+private let frozenTowerTypeMessage: Swift::String =
   "[frozen tower type] [API-IMPL-022]: public stored value types in the storage tower "
   + "are @frozen (layout-locked from birth) so cross-module consuming decomposition "
   + "(take()-style unwraps, consuming makeIterator()) stays legal without "
@@ -47,13 +47,13 @@ internal final class FrozenTowerTypeVisitor: SyntaxVisitor {
   let converter: SourceLocationConverter
   var matches: [Diagnostic.Record] = []
 
-  private static let towerRoots: Swift.Set<Swift.String> = [
+  private static let towerRoots: Swift::Set<Swift::String> = [
     "Storage", "Store", "Buffer", "Shared", "Array", "Fixed", "Column",
     "Queue", "Deque", "SlotMap", "Stack", "Heap", "Tree", "Graph", "Hash",
     "Set", "Dictionary",
   ]
 
-  private static let exemptNames: Swift.Set<Swift.String> = [
+  private static let exemptNames: Swift::Set<Swift::String> = [
     "Checkpoint", "Scalar", "Segments", "Walk", "Iterator", "View",
   ]
 
@@ -100,18 +100,18 @@ internal final class FrozenTowerTypeVisitor: SyntaxVisitor {
     return .visitChildren
   }
 
-  private func isPublic(_ modifiers: DeclModifierListSyntax) -> Swift.Bool {
+  private func isPublic(_ modifiers: DeclModifierListSyntax) -> Swift::Bool {
     modifiers.contains { $0.name.text == "public" }
   }
 
-  private func hasFrozen(_ attributes: AttributeListSyntax) -> Swift.Bool {
+  private func hasFrozen(_ attributes: AttributeListSyntax) -> Swift::Bool {
     attributes.contains { element in
       guard case .attribute(let attribute) = element else { return false }
       return attribute.attributeName.trimmedDescription == "frozen"
     }
   }
 
-  private func suppressesEscapable(_ clause: InheritanceClauseSyntax?) -> Swift.Bool {
+  private func suppressesEscapable(_ clause: InheritanceClauseSyntax?) -> Swift::Bool {
     guard let clause else { return false }
     return clause.inheritedTypes.contains { inherited in
       guard let suppressed = inherited.type.as(SuppressedTypeSyntax.self) else {
@@ -121,7 +121,7 @@ internal final class FrozenTowerTypeVisitor: SyntaxVisitor {
     }
   }
 
-  private func hasStoredProperty(_ memberBlock: MemberBlockSyntax) -> Swift.Bool {
+  private func hasStoredProperty(_ memberBlock: MemberBlockSyntax) -> Swift::Bool {
     memberBlock.members.contains { member in
       guard let variable = member.decl.as(VariableDeclSyntax.self) else { return false }
       guard !variable.modifiers.contains(where: { $0.name.text == "static" }) else {
@@ -131,13 +131,13 @@ internal final class FrozenTowerTypeVisitor: SyntaxVisitor {
     }
   }
 
-  private func rootNamespace(of node: StructDeclSyntax) -> Swift.String? {
-    var outermost: Swift.String? = node.name.text
+  private func rootNamespace(of node: StructDeclSyntax) -> Swift::String? {
+    var outermost: Swift::String? = node.name.text
     var current: Syntax? = node.parent
     while let ancestor = current {
       if let ext = ancestor.as(ExtensionDeclSyntax.self) {
         outermost = baseIdentifier(of: ext.extendedType)
-      } else if let nominal = ancestor.asProtocol(NamedDeclSyntax.self),
+      } else if let nominal = ancestor.asProtocol((any NamedDeclSyntax).self),
         ancestor.is(StructDeclSyntax.self) || ancestor.is(EnumDeclSyntax.self)
           || ancestor.is(ClassDeclSyntax.self) || ancestor.is(ActorDeclSyntax.self)
       {
@@ -148,7 +148,7 @@ internal final class FrozenTowerTypeVisitor: SyntaxVisitor {
     return outermost
   }
 
-  private func baseIdentifier(of type: TypeSyntax) -> Swift.String? {
+  private func baseIdentifier(of type: TypeSyntax) -> Swift::String? {
     if let member = type.as(MemberTypeSyntax.self) {
       return baseIdentifier(of: member.baseType)
     }

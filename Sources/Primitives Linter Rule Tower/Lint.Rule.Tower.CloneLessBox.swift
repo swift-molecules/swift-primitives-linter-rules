@@ -33,7 +33,7 @@ extension Lint.Rule {
   )
 }
 
-private let cloneLessBoxMessage: Swift.String =
+private let cloneLessBoxMessage: Swift::String =
   "[clone-less box] [MEM-COPY-019]: this overload replaces a Shared box under "
   + "~Copyable element bounds with no implicitly-Copyable same-name twin in this "
   + "file. Overload resolution statically selects the strategy-less Shared init, so "
@@ -48,9 +48,9 @@ internal final class CloneLessBoxVisitor: SyntaxVisitor {
   let converter: SourceLocationConverter
 
   private struct Candidate {
-    let name: Swift.String
-    let suppressed: Swift.Bool
-    let assignsBox: Swift.Bool
+    let name: Swift::String
+    let suppressed: Swift::Bool
+    let assignsBox: Swift::Bool
     let token: TokenSyntax
   }
   private var candidates: [Candidate] = []
@@ -89,7 +89,7 @@ internal final class CloneLessBoxVisitor: SyntaxVisitor {
   }
 
   func finish() -> [Diagnostic.Record] {
-    let twinNames = Swift.Set(candidates.filter { !$0.suppressed }.map(\.name))
+    let twinNames = Swift::Set(candidates.filter { !$0.suppressed }.map(\.name))
     return
       candidates
       .filter { $0.suppressed && $0.assignsBox && !twinNames.contains($0.name) }
@@ -112,7 +112,7 @@ internal final class CloneLessBoxVisitor: SyntaxVisitor {
   }
 
   private func record(
-    name: Swift.String,
+    name: Swift::String,
     token: TokenSyntax,
     genericParameters: GenericParameterClauseSyntax?,
     whereClause: GenericWhereClauseSyntax?,
@@ -132,9 +132,9 @@ internal final class CloneLessBoxVisitor: SyntaxVisitor {
   private func suppressesOwnParameter(
     _ genericParameters: GenericParameterClauseSyntax?,
     _ whereClause: GenericWhereClauseSyntax?
-  ) -> Swift.Bool {
+  ) -> Swift::Bool {
     guard let genericParameters else { return false }
-    var ownNames: Swift.Set<Swift.String> = []
+    var ownNames: Swift::Set<Swift::String> = []
     for parameter in genericParameters.parameters {
       ownNames.insert(parameter.name.text)
       if let inherited = parameter.inheritedType, containsSuppressedCopyable(inherited) {
@@ -153,7 +153,7 @@ internal final class CloneLessBoxVisitor: SyntaxVisitor {
     return false
   }
 
-  private func containsSuppressedCopyable(_ type: TypeSyntax) -> Swift.Bool {
+  private func containsSuppressedCopyable(_ type: TypeSyntax) -> Swift::Bool {
     if let suppressed = type.as(SuppressedTypeSyntax.self) {
       return suppressed.type.trimmedDescription == "Copyable"
     }
@@ -165,7 +165,7 @@ internal final class CloneLessBoxVisitor: SyntaxVisitor {
     return false
   }
 
-  private func assignsSharedBox(_ body: CodeBlockSyntax) -> Swift.Bool {
+  private func assignsSharedBox(_ body: CodeBlockSyntax) -> Swift::Bool {
     let finder = SharedBoxAssignmentFinder(viewMode: .sourceAccurate)
     finder.walk(body)
     return finder.found
