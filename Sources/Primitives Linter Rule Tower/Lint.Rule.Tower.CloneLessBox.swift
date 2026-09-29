@@ -11,7 +11,7 @@ extension Lint.Rule {
         id: "clone-less box suppressed replacement",
         source: """
           extension Dictionary where S: ~Copyable {
-              public mutating func removeAll<K: Hash.Key & ~Copyable, V: ~Copyable>()
+              public mutating func removeAll<K: Swift.Hashable & ~Copyable, V: ~Copyable>()
               where S == Shared<Hash.Entry<K, V>, Engine<K, V>> {
                   self.store = Shared(Engine<K, V>())
               }

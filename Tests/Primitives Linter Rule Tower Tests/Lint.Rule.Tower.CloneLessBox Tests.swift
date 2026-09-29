@@ -32,7 +32,7 @@ extension Lint.Rule.`clone-less box Tests`.Unit {
     let findings = Lint.Rule.`clone-less box Tests`.findings(
       in: """
         extension Dictionary where S: ~Copyable {
-            public mutating func removeAll<K: Hash.Key & ~Copyable, V: ~Copyable>()
+            public mutating func removeAll<K: Swift.Hashable & ~Copyable, V: ~Copyable>()
             where S == Shared<Hash.Entry<K, V>, Engine<K, V>> {
                 self.store = Shared(Engine<K, V>())
             }
@@ -53,7 +53,7 @@ extension Lint.Rule.`clone-less box Tests`.Unit {
       in: """
         extension Stack {
             public init<Element: ~Copyable>(building: Element) {
-                self.store = Shared(Column.Heap<Element>())
+                self.store = Shared(Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>>.Linear())
             }
         }
         """
@@ -127,12 +127,12 @@ extension Lint.Rule.`clone-less box Tests`.Negative {
     let findings = Lint.Rule.`clone-less box Tests`.findings(
       in: """
         extension Dictionary where S: ~Copyable {
-            public mutating func removeAll<K: Hash.Key, V>()
+            public mutating func removeAll<K: Swift.Hashable, V>()
             where S == Shared<Hash.Entry<K, V>, Engine<K, V>> {
                 self.store = Shared(Engine<K, V>())
             }
 
-            public mutating func removeAll<K: Hash.Key & ~Copyable, V: ~Copyable>()
+            public mutating func removeAll<K: Swift.Hashable & ~Copyable, V: ~Copyable>()
             where S == Shared<Hash.Entry<K, V>, Engine<K, V>> {
                 self.store = Shared(Engine<K, V>())
             }
