@@ -8,8 +8,8 @@ extension Lint.Rule.Bundle {
     Lint.Rule.Bundle.institute + [
 
       .enable(.`frozen tower type`),
-      .enable(.`clone-less box`),
+      .enable(.`clone-less box`, severity: .error),
 
-      .enable(.`carrier column bound`),
+      .enable(.`carrier column bound`, severity: .error),
     ]
 }

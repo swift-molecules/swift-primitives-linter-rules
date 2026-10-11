@@ -46,6 +46,13 @@ let package = Package(
             ]
         ),
         .testTarget(
+            name: "Linter Primitives Rules Tests",
+            dependencies: [
+                .target(name: "Linter Primitives Rules"),
+                .product(name: "Lint", package: "swift-lint"),
+            ]
+        ),
+        .testTarget(
             name: "Primitives Linter Rule Tower Tests",
             dependencies: [
                 .target(name: "Primitives Linter Rule Tower"),
