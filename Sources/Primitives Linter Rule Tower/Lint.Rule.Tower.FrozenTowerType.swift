@@ -165,7 +165,7 @@ internal final class FrozenTowerTypeVisitor: SyntaxVisitor {
       return baseIdentifier(of: member.baseType)
     }
     if let identifier = type.as(IdentifierTypeSyntax.self) {
-      return identifier.moduleSelector?.moduleName.text ?? identifier.name.text
+      return identifier.moduleSelector?.moduleName.text == "Swift" ? "Swift" : identifier.name.text
     }
     return nil
   }
