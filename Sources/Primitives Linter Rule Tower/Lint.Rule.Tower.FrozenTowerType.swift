@@ -8,6 +8,18 @@ extension Lint.Rule {
     default: .warning,
     controls: [
       .init(
+        id: "frozen tower type stdlib extension with module selector",
+        source: "extension Swift::Array { public struct Serializer { public let elements: [Element] } }",
+        path: "Controls/FrozenTowerType.swift",
+        expectation: .clean
+      ),
+      .init(
+        id: "frozen tower type stdlib extension with member path",
+        source: "extension Swift.Array { public struct Serializer { public let elements: [Element] } }",
+        path: "Controls/FrozenTowerType.swift",
+        expectation: .clean
+      ),
+      .init(
         id: "frozen tower type missing attribute",
         source: """
           extension Storage {
@@ -153,7 +165,7 @@ internal final class FrozenTowerTypeVisitor: SyntaxVisitor {
       return baseIdentifier(of: member.baseType)
     }
     if let identifier = type.as(IdentifierTypeSyntax.self) {
-      return identifier.name.text
+      return identifier.moduleSelector?.moduleName.text ?? identifier.name.text
     }
     return nil
   }
